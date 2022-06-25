@@ -101,13 +101,13 @@ class ArticleController extends Controller
             return response()->json($validator->messages(), 422);
         }
 
-        $article->update([
+        $update = $article->update([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
             'body' => $request->body
         ]);
 
-        if ($article) {
+        if ($update) {
             return response()->json([
                 'success' => true,
                 'message' => 'Article updated successfully.',
@@ -117,7 +117,7 @@ class ArticleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update article.'
-            ]);
+            ], 500);
         }
     }
 
@@ -127,8 +127,20 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Article $article)
     {
-        //
+        $delete = $article->delete();
+
+        if ($delete) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Article deleted successfully.',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete article.'
+            ], 500);
+        }
     }
 }
