@@ -74,10 +74,8 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Article $article)
     {
-        $article = Article::with(['user', 'comments'])->findOrFail($id);
-
         return response()->json([
             'success' => true,
             'message' => 'Article retrieved successfully.',
