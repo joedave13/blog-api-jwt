@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -11,7 +12,7 @@ class ArticleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['api'])->except('index');
+        $this->middleware(['api'])->except(['index', 'show']);
     }
 
     /**
@@ -21,7 +22,13 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        //
+        $articles = Article::with(['user', 'comments'])->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Articles retrieved successfully.',
+            'data' => $articles
+        ]);
     }
 
     /**
@@ -69,7 +76,13 @@ class ArticleController extends Controller
      */
     public function show($id)
     {
-        //
+        $article = Article::with(['user', 'comments'])->findOrFail($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Article retrieved successfully.',
+            'data' => $article
+        ]);
     }
 
     /**
