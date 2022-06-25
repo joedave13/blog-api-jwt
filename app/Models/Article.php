@@ -12,6 +12,8 @@ class Article extends Model
 
     protected $fillable = ['user_id', 'title', 'slug', 'body'];
 
+    protected $with = ['user', 'comments'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
