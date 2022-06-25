@@ -92,9 +92,35 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Article $article)
     {
-        //
+        $validator = Validator::make($request->except('_token'), [
+            'title' => ['required', 'string', 'max:255'],
+            'body' => ['required', 'string']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+        }
+
+        $article->update([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'body' => $request->body
+        ]);
+
+        if ($article) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Article updated successfully.',
+                'data' => $article
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update article.'
+            ]);
+        }
     }
 
     /**
