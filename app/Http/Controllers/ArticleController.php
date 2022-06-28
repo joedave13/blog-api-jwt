@@ -76,6 +76,8 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        $article->load(['user', 'comments']);
+
         return response()->json([
             'success' => true,
             'message' => 'Article retrieved successfully.',
