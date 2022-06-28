@@ -87,6 +87,12 @@ class CommentController extends Controller
             return response()->json($validator->messages(), 422);
         }
 
+        if (Auth::id() != $comment->user->id) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
         $update = $comment->update([
             'comment' => $request->comment
         ]);
@@ -113,6 +119,12 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
+        if (Auth::id() != $comment->user->id) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
         $delete = $comment->delete();
 
         if ($delete) {
