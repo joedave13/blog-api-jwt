@@ -22,7 +22,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with(['user', 'comments'])->get();
+        $articles = Article::with(['user'])->paginate(5);
 
         return response()->json([
             'success' => true,
