@@ -103,6 +103,12 @@ class ArticleController extends Controller
             return response()->json($validator->messages(), 422);
         }
 
+        if (Auth::id() != $article->user->id) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
         $update = $article->update([
             'title' => $request->title,
             'slug' => Str::slug($request->title),
@@ -131,6 +137,12 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+        if (Auth::id() != $article->user->id) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
         $delete = $article->delete();
 
         if ($delete) {
