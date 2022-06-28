@@ -111,8 +111,20 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comment $comment)
     {
-        //
+        $delete = $comment->delete();
+
+        if ($delete) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment deleted successfully.',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete comment.'
+            ], 500);
+        }
     }
 }
