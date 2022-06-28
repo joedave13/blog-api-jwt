@@ -12,8 +12,6 @@ class Article extends Model
 
     protected $fillable = ['user_id', 'title', 'slug', 'body'];
 
-    protected $with = ['user', 'comments'];
-
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -21,6 +19,6 @@ class Article extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class, 'article_id', 'id');
     }
 }
