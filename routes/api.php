@@ -31,3 +31,4 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
 
 Route::apiResource('article', ArticleController::class);
 Route::post('comment/{article}', [CommentController::class, 'store']);
+Route::put('comment/{comment}', [CommentController::class, 'update']);

@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['api']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -71,9 +77,32 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Comment $comment)
     {
-        //
+        $validator = Validator::make($request->only('comment'), [
+            'comment' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+        }
+
+        $update = $comment->update([
+            'comment' => $request->comment
+        ]);
+
+        if ($update) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment updated successfully.',
+                'data' => $comment
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update comment.'
+            ], 500);
+        }
     }
 
     /**
